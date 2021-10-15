@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+<defs>
+	<symbol id="chevrons-left" viewBox="0 0 36 36">
+		<circle cx="18" cy="18" r="18" stroke-width="0"></circle>
+		<polyline points="17 23 12 18 17 13" fill="none"></polyline>
+		<polyline points="24 23 19 18 24 13" fill="none"></polyline>
+	</symbol>
+	<symbol id="chevron-left" viewBox="0 0 36 36">
+		<circle cx="18" cy="18" r="18" stroke-width="0"></circle>
+		<polyline points="21 24 15 18 21 12" fill="none"></polyline>
+	</symbol>
+	<symbol id="chevron-right" viewBox="0 0 36 36">
+		<circle cx="18" cy="18" r="18" stroke-width="0"></circle>
+		<polyline points="15 24 21 18 15 12" fill="none"></polyline>
+	</symbol>
+	<symbol id="chevrons-right" viewBox="0 0 36 36">
+		<circle cx="18" cy="18" r="18" stroke-width="0"></circle>
+		<polyline points="19 23 24 18 19 13" fill="none"></polyline>
+		<polyline points="12 23 17 18 12 13" fill="none"></polyline>
+	</symbol>	
+	<symbol id="x" viewBox="0 0 36 36">
+		<circle cx="18" cy="18" r="18" stroke-width="0"></circle>
+		<line x1="24" y1="12" x2="12" y2="24" fill="none"></line>
+		<line x1="12" y1="12" x2="24" y2="24" fill="none"></line>
+	</symbol>
+</defs>
+</svg>

@@ -1,0 +1,480 @@
+/* 
+ * main parameters and layout definition for the Simple Web Framework
+ * version: 1.1
+ * license: Apache 2.0
+ * author:  François Court
+ * date: october 2021
+ *
+ */
+body { 
+	display: grid;
+	grid-template-areas: 
+		"header header"
+		"nav main"
+		"footer footer";
+	grid-template-rows: var(--headerh) 1fr var(--footerh);
+	grid-template-columns: var(--navw) 1fr;
+	grid-gap: 0px;
+	/*  
+	 * NB: 100vh too big on android/mobile: a resize function needed
+	 * to set body.height to window.innerHeight
+	 */
+	height: 100vh; 
+	margin: 0;
+	font-family: Roboto, Sans-serif;
+	font-size: 14px;
+	color: var(--fontcolor);/*#1a1a1a;*/
+}
+
+/* prevents font-size boosting in mobile chrome */
+html * {
+	max-height:1000000px;
+}
+
+/* 
+ * Style for a loading screen - ie blocking container during page load
+ * the loading screen slowly disappears once the page is loaded with the addition of the
+ * f1-slow-hide class below
+ */
+.f1-loadscreen {
+	position:absolute;
+	top:var(--headerh);
+	bottom:0px;
+	left:0px;
+	right:0px;
+	background-color:white;
+	z-index:500;
+}
+/* class to reveal a page gracefully after it has loaded */
+.f1-slow-hide {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 1s, opacity 1s linear;
+}
+
+.f1-slow-show {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s 1s, opacity 1s linear;
+}
+
+.f1-normal-hide {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 300ms, opacity 300ms linear;
+}
+
+
+/* 
+ * General usage styles
+ */
+.f1-hide {
+  display: none;
+}
+
+.f1-show {
+  display: block;
+}
+
+.f1-nopadding {
+	padding:0px;
+}
+/* top/bottom padding at 0 - left adn right at 30 */
+.f1-padding-0-30 {
+	padding: 0px 30px;
+}
+.f1-padding-10-20 {
+	padding: 10px 20px;
+}
+
+
+/* id for grid areas (f1ga_...) */
+#f1ga_header {
+	grid-area: header;
+}
+#f1ga_footer {
+	grid-area: footer;
+}
+#f1ga_main { 
+	grid-area: main;
+}
+#f1ga_nav { 
+	grid-area: nav; 
+}
+
+ 
+div {
+  padding: 5px;
+}
+nav {
+  padding: 5px;
+}
+
+footer {
+  padding: 0px;
+}
+header {
+	padding: 0px;
+	background: gold;
+	height:var(--headerh);
+}
+main {
+	padding: var(--paddingdef);
+	background: CadetBlue;
+}
+nav {
+  background: var(--menucolor);
+}
+input[type="submit"] {
+  border: 0px solid grey;
+  cursor:pointer;
+  background: Silver;
+  box-shadow: none;
+  border-radius: 1px;
+  padding: 0.3em 1em;
+}
+
+/* thin grey horizontal line */
+.f1-hr {
+	border: none;
+	height: 1px;
+	color: lightgrey; /* old IE*/
+	background-color: lightgrey;
+}
+
+/*
+ * class for stacking panels (only one set of such stacked panels per page)
+ */
+.f1-stacked-panel {
+	/*overflow: auto;*/
+	/*white-space: nowrap;*/
+
+/*	
+	top: calc(var(--headerh) + 0px + var(--paddingdef));
+	width: calc(100vw - var(--navw) - var(--paddingdef)*2);
+	height: calc(100vh - var(--headerh) - var(--footerh) - var(--paddingdef)*2 - 0px);
+*/
+	position:absolute;
+	padding:0px;
+	left:0px; 
+	right:0px;
+	top:0px;
+	bottom:0px;
+}
+/* inside panels */
+.f1-inpanel {
+	position: absolute;
+	padding:0px;
+	overflow: auto;
+/*	
+	width: calc(100vw - var(--navw) - var(--paddingdef)*2);
+	height: calc(100vh - var(--headerh) - var(--footerh) - var(--paddingdef)*2 - 40px);
+*/
+	left:0px; 
+	right:0px;
+	top:40px;
+	bottom:0px;
+	visibility:hidden;
+}
+/* inside menu bar */
+.f1-inmenu-bar {
+	padding:0px;
+	top:0px;
+	height:40px;
+	width:100%;
+	background: ivory;/*var(--menucolor);*/
+	display:flex;
+	align-items:center;
+	justify-content: flex-start;
+}
+/* items for menu and inside menus */
+.f1-menuitem {
+	text-decoration: none;
+	color: var(--fontcolor);
+	padding:5px;
+	border-radius: 3px;
+}
+.f1-menuitem:hover {
+	color: white;
+	background-color: LightGrey;
+	stroke: white;
+	cursor:pointer;
+}
+
+/* containers for header and footer */
+.f1-footer, .f1-header {
+	padding:0px;
+	top:0px;
+	height:100%;
+	width:100%;
+	background: white;
+
+	display:flex;
+	align-items:center;
+	justify-content: space-between;	
+}
+.f1-footer, .f1-footer-left,.f1-footer-center,.f1-footer-right {
+	font-size: 0.9em;
+}
+.f1-footer-left,.f1-footer-center,.f1-footer-right {
+	background:white;
+	padding:0px;
+}
+.f1-footer-left, .f1-footer-right  {
+	width:10%;
+}
+.f1-footer-center {
+	text-align:center;
+	width:80%;
+}
+.f1-footer-right {
+	text-align:right;
+}
+
+/* unused */
+.verticalalign {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+/* base style for tables */
+.cltbbase {
+	border:0px solid black;
+}
+.cltbbase th { 
+	background-color:#000;
+	color:white;
+	width:50%;
+}
+.cltbbase td, .cltbbase th {
+	padding:5px;
+	border:1px solid #000000;
+	border-radius:2px
+}
+
+/*  to center the table (and other elements) in the middle of its div */
+/* for a table element, you can also use instead the align="center" attribute */
+.centertable {
+	/*display: block; */
+	/*margin-left: auto; */
+	/*margin-right: auto; */
+	margin: 0 auto;
+}
+.tbh, .tbf {
+	border:0px solid black;
+}
+.tbh th { background-color:#000;color:white;width:50%; }
+.tbh td, .cltbbase th, .tbf td { padding:0px;border:0px solid #000;border-radius:0px }
+
+
+nav ul, .f1-menu-ul {
+	list-style: none; 
+	/*line-height: 30px;*/
+	padding: 0px; 
+}
+nav ul li{
+	//color: #333;
+}  
+
+.f1-cu-pointer {
+	cursor: pointer;
+}
+
+.f1-cu-default {
+	cursor: default;
+}
+
+.f1-wrap {
+	background:gold; 
+	opacity:1; 
+	position:relative; 
+	height:100%; 
+	width:100%;
+	padding:0;
+}
+
+/* 
+ * SVG Icon styles
+ * check https://github.com/feathericons/feather
+ *
+ */
+.f1-icon {
+	width: 20px;
+	height: 20px;
+	stroke: darkslategrey;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	fill: none;
+}
+.f1-icon-circled-large, .f1-icon-circled {
+	stroke: white;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	fill:grey;
+	fill-opacity: 0.5;
+}
+.f1-icon-circled {
+	width: 36px;
+	height: 36px;
+}
+.f1-icon-circled-large {
+	width: 60px;
+	height: 60px;
+}
+
+/* modal forms/floating menu management */
+/* background (the viewport) */
+.f1-modal-background {
+  display: none;
+  position: fixed;
+  z-index: 200;
+  /*padding-top: 0px; *//* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%;
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* modal content */
+.f1-modal {
+  background-color: var(--menucolor);
+  margin: auto;
+  padding: 8px;
+  border: 1px solid #888;
+  position: absolute;
+}
+
+/* close Button */
+.f1-modal-close {
+  color: #aaaaaa;
+  /*background-color: red;*/
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  top: 5px;
+  left: 155px;
+  position: absolute;
+}
+
+.f1-modal-close:hover,
+.f1-modal-close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* 
+ * Justified gallery styles
+ */
+/* container (div) of each image of the gallery to jsutify */
+.f1-juga {
+	border:0px solid pink;
+	padding:0px;
+	position:absolute;
+	background-color:white;
+}
+/* image inside the previous container */
+.f1-juga-img {
+	border:solid white;
+	border-radius: var(--jgimgborderradius);
+	border-width: var(--jgimgborder);
+}
+/* checkmark definition for selected images in the gallery */
+.f1-img-checkmark {
+	background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCAtMzQ2LjM4NCkiPjxwYXRoIGZpbGw9IiMxZWM4MWUiIGZpbGwtb3BhY2l0eT0iLjgiIGQ9Ik0zMiAzNDYuNGEzMiAzMiAwIDAgMC0zMiAzMiAzMiAzMiAwIDAgMCAzMiAzMiAzMiAzMiAwIDAgMCAzMi0zMiAzMiAzMiAwIDAgMC0zMi0zMnptMjEuMyAxMC4zbC0yNC41IDQxTDkuNSAzNzVsMTcuNyA5LjYgMjYtMjh6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTkuNSAzNzUuMmwxOS4zIDIyLjQgMjQuNS00MS0yNiAyOC4yeiIvPjwvZz48L3N2Zz4=');
+	background-size: 100% 100%;
+	position: absolute;
+	width: var(--imgcheckdim);
+	height: var(--imgcheckdim);
+	top: 0;
+	left:0;
+	z-index:100;
+}
+
+/* class used to grey and sligthly reduce ni size an image (eg for checkable images) */
+.f1-img-grey {
+	transform: scale(0.9);
+	filter: grayscale(1);
+	transition: filter 300ms ease-in, transform 300ms;
+}
+
+/* 
+ * Lightbox styles
+ * Used to allow the consultation of images, eg from a gallery
+ */
+/* lightbox background */
+.f1-lb-background {
+	position: fixed;
+	z-index: 10;
+	padding: 0px;
+	left: 0;
+	top: 0;
+	right: 0; 
+	bottom: 0;
+	overflow: auto;
+	/* Fallback color */
+	background-color: rgb(0,0,0); 
+	background-color: rgba(0,0,0,0.95);
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	/* to prevent accidental selection of the image (with an ugly blue background) */
+	user-select: none;
+}
+
+/* lightbox image */
+.f1-lb-img {
+	/*background-color: var(--menucolor);*/
+	margin: auto;
+	padding: 0px;
+	border: 0px solid #aaa;
+	border-radius: 0px;
+	object-fit:scale-down; 
+	height: 100%;
+	width: 100%;
+}
+.f1-lb-header {
+	color:rgb(255,255,255);
+	padding:0px;
+	position:absolute;
+	top:0px;
+	right:0px;
+	left:0px;
+	height:var(--lbheaderheight);
+	z-index: 11;
+	display:flex;
+	align-items:center;
+	justify-content:flex-end;
+}
+/* side panels for navigation control */
+.f1-lb-panel, .f1-lb-panel-right, .f1-lb-panel-left {
+	position:absolute;
+	width:40%;
+	top:var(--lbheaderheight);
+	bottom:var(--lbheaderheight);
+	padding:0px;
+	z-index: 11;
+	display:flex;
+	align-items:center;
+}
+.f1-lb-panel-right{
+	right:0px;
+	justify-content:flex-end;
+}
+.f1-lb-panel-left {
+	left:0px;
+	justify-content:flex-start;
+}
+/* hover management for the lightbox controls */
+.f1-lb-control-hovered, .f1-lb-header:hover > .f1-lb-control, .f1-lb-panel:hover > .f1-lb-control {
+	cursor:pointer;
+	display: block;
+}
+
+ 
+ 

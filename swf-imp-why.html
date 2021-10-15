@@ -1,0 +1,50 @@
+<h2>Why another web application framework?</h2>
+<p>
+While the world certainly does not need yet another framework to develop web
+applications, I created this one for my own education and personal needs, which are 
+fairly limited. A cursory search of available solutions returns a confusing list of 
+tools of inequal complexity or usefulness (to me), and rather than spend time learning
+one of these tools, I decided to invest an equivalent ammount of effort in developing
+a taylor-made solution exactly adapted to my needs - no more, no less. This approach 
+provides the additional benefit of re-acquaiting myself with the underlying 
+technologies and their evolutions since I last professionnally coded (2005).
+</p>
+<p style="margin:0">
+It is true that by shunning sophisticated frameworks, one is missing out on well tested 
+functionalities, some critical (like authentication, or session management), but there are 
+behind this conscious decision key design principles: 
+</p>
+<ul style="margin-top:0">
+	<li>avoid clutter</li>
+	<li>do not use existing frameworks before having developed a rationale behind the choice of a specific solution,
+		as well as a minimum understanding of how they work
+	</li>
+	<li>develop and design by (testable) increments: development is not unlike evolution by natural selection
+		except that in our case, random mutations are replaced by (hopefully) educated
+		coding decisions, and natural selection by the usability of an application. I do not believe
+		in lenghty design and coding phases without multiple interim, testable versions,
+		demonstrating every step of the way what works and what does not. Otherwise, you invariably end up
+		with an indigestible bowl of spaghetti, impossible to debug and maintain.
+	</li>
+	<li>embrace refactoring; many developers tend to avoid refactoring because they are afraid of breaking
+	beyond repair their existing codebase: this is a sign of weakness. Professional developers embrace changes
+	when changes are needed because they are in total control of their code base and of their tools.
+	</li>
+</ul>
+
+<p style="margin:0">
+Current requirements and specs are detailed below:
+</p>
+<ul style="margin-top:0">
+	<li>single page application with header, footer, main panel with tabs, menu and optional side navigation panel</li>
+	<li>additional components</li>
+		<ul>
+			<li>editable table</li>
+			<li>justified gallery for photos and pictures, witch checkable images and a lightbox view</li>
+		</ul>
+	<li>client side javascript</li>
+</ul>
+They will certainly evolve with time and new needs, including
+server side functions to manage more sophisticated requirements (like authentication, localization) but the current
+objective was to put together a barebone framework to quickly develop simple applications like this 
+<a href="https://www.malagate.com/tools/uct/uct-main.html" target="_blank">Universal Conversion Tool</a>
