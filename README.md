@@ -13,7 +13,7 @@ A Simple Web Framework
     - lightbox view
 - client side javascript
 
-These specs will certainly evolve with time and new needs, including server side functions to manage more sophisticated requirements (like authentication, localization) but the current objective was to put together a barebone framework to quickly develop simple applications like this Universal Conversion Tool
+These specs will certainly evolve with time and new needs, including server side functions to manage more sophisticated requirements (like authentication, localization) but the current objective was to put together a barebone framework to quickly develop simple applications like this [Universal Conversion Tool](https://www.malagate.com/tools/uct/uct-main.html)
 
 ## Dependencies
 - fonts from Google
