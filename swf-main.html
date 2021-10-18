@@ -1,6 +1,6 @@
 <!-- 
 	Simple Web Framework
-	version: 1.1
+	version: 1.1a
 	license: Apache 2.0
 	author:  François Court
 	date: october 2021
@@ -128,12 +128,6 @@ function selectSubTab(id) {
 		</tr>
 	</table>
 	-->
-<!-- creation of standard header client-side: not a good idea, does not work well depending on the browser
-<script type="module">  
-import * as utils from './libs/js/f1-utils.js';
-utils.spawnHeader("Template", "./images/HAL-9000-032.png");
-</script>
--->
 
 	</header>
 	<main id="f1ga_main" class="" style="visibility: visible;">
@@ -304,9 +298,10 @@ utils.spawnHeader("Template", "./images/HAL-9000-032.png");
 	
 
 
-<script type="module">  
+<script type="module">
 
 	import * as utils from './swf-utils.js';
+	import * as tb from './swf-edtb.js';
 	import * as jg from './swf-juga.js';
 
 	// options
@@ -583,7 +578,7 @@ utils.spawnHeader("Template", "./images/HAL-9000-032.png");
 		function onUpdate(elt) {
 			console.log(elt.textContent);
 		}
-		var tbed=new utils._edtb(onUpdate);
+		var tbed=new tb._edtb(onUpdate, {toutMax: 5000});
 		
 		// test ajax
 		$("#btajax").click(function () {
@@ -628,6 +623,7 @@ utils.spawnHeader("Template", "./images/HAL-9000-032.png");
 		document.getElementById("block").classList.add('f1-slow-hide');
 		console.log(utils.version());
 		console.log(jg.version());
+		console.log(tb.version());
 	});
 	
 	

@@ -1,7 +1,7 @@
 /*
  * Justified Photo Gallery class, part of the Simple Web Framework
  *
- * version: 1.1
+ * version: 1.1a
  * license: Apache 2.0
  * author:  François Court
  * date: october 2021
@@ -9,6 +9,7 @@
  */
  
 "use strict";
+
 export { 
 	_juga,
 	version
@@ -17,7 +18,7 @@ export {
 import * as utils from './swf-utils.js';
 
 function version() {
-	return "swf juga v1.1";	
+	return "swf juga v1.1a";	
 }
 
 // class storing the definition of an image
@@ -516,19 +517,19 @@ class _juga {
 	}
 	// listener to the keydown event - and close the ligthbox on ESC
 	lbCheckKeyboard(e) {
-		if (e.which == 27) {
+		if (e.which == utils.KEYS.ESC) {
 			that.lbClose();
 		}
-		else if (e.which == 39) {
+		else if (e.which == utils.KEYS.RIGHT) {
 			that.lbNext();
 		}
-		else if (e.which == 37) {
+		else if (e.which == utils.KEYS.LEFT) {
 			that.lbPrev();			
 		}
-		else if (e.which == 40) {
+		else if (e.which == utils.KEYS.DOWN) {
 			that.lbLast();			
 		}
-		else if (e.which == 38) {
+		else if (e.which == utils.KEYS.UP) {
 			that.lbFirst();			
 		}
 	}

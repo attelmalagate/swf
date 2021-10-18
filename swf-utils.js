@@ -1,7 +1,7 @@
 /*
  * Utils, part of the Simple Web Framework
  *
- * version: 1.0
+ * version: 1.1a
  * license: Apache 2.0
  * author:  François Court
  * date: october 2021
@@ -9,6 +9,7 @@
  */
  
 "use strict";
+
 export { 
 	importsHTML, 
 	triggerClickById, 
@@ -16,172 +17,29 @@ export {
 	setWidthByClassName,
 	getCSSVar,
 	setCSSVar,
-	spawnHeader,
-	_edtb,
 	_browser,
 	format,
 	version,
+	KEYS,
 	dbg
 };
 
 function version() {
-	return "swf utils v1.0";
+	return "swf utils v1.1a";
 }
 function dbg() {
 	return "dbg01";
 }
 const svgns="http://www.w3.org/2000/svg";
 
-// Editable Table class management _edtb
-// editable cells (td elements) are identified with the contenteditable attribute at true
-// _edtbs keep track of the cell being edited, manages callbacks for cancellation, validation and
-// visually identifies a cell being edited (different background/borderradius)
-const _edtb_backgroundColor="white";
-const _edtb_borderRadius="5px";
-const _edtb_border="";//"3px solid #808080";
-const _edtb_cursor="text";//"3px solid #808080";
-class _edtb {
-	// on success is called when the input is validated
-	constructor(onUpdate){
-		this.elt=null; // element being edited
-		this.background="";
-		this.text="";
-		this.borderRadius="";
-		this.border="";
-		this.cursor="";
-		this.toutid=0; // inactivity timeout
-		this.toutmax=4000; //  seconds
-		this.onUpdate=onUpdate;
-		// initialization of the editable cells, status at 0
-		// save the current object to be used later in the event callbacks click and keydown
-		const that=this;
-		// go through every editable cell in the table and add the event listeners for click and keydown
-		// where most of the logic reside
-		[].forEach.call(document.querySelectorAll('[contenteditable]'), function(elt) {
-			elt.setAttribute("data-edit","0");
-			// add the management of the click events
-			elt.addEventListener('click', function(evt) {
-				that.clearTimer();
-				// target is the element (tb) where the event happens
-				const target=evt.target;
-				if (target.getAttribute("data-edit") === "0") {
-					// click on inactive cell=>switch to edited status
-					target.setAttribute("data-edit", "1");
-					if (that.elt != null) {
-						// restoration of the passive configuration of the previously edited cell
-						that.elt.setAttribute("data-edit", "0");
-						that.elt.textContent=that.text;
-						that.restoreCSS();	
-					}
-					// keep track of the currently edited cell
-					that.elt=target;
-					that.saveCSS();
-					that.elt.style.backgroundColor = _edtb_backgroundColor;
-					that.elt.style.borderRadius = _edtb_borderRadius;
-					that.elt.style.border = _edtb_border;
-					that.elt.style.cursor = _edtb_cursor;
-					that.setTimer();
-				}
-			});
-			elt.addEventListener('keydown', function(evt) {
-				// and the management of the keydown event
-				that.clearTimer();
-				let rv=false;
-				let stop_edition=false;
-				const target=evt.target;
-				if (target.getAttribute("data-edit") === "1") {
-					if ((evt.which == 27) || (evt.which == 9)) {
-						// ESC or TAB, cancel edition and revert to saved values
-						if (that.elt != null) {
-							that.elt.textContent=that.text;
-						}
-						stop_edition=true;
-						rv=true;
-					}
-					else if (evt.which == 13) {
-						// ENTER, the input is validated, edition mode is stopped and the onUpdate callback is called
-						rv=false; // to prevent adding a line break in the cell being edited 
-						stop_edition=true;
-						that.onUpdate(target);
-					}
-					else {
-						// add here other filters as appropriate
-						that.setTimer();
-						rv=true;
-					}
-					if (stop_edition) {
-						that.restoreCSS();
-						target.setAttribute("data-edit", "0");
-						// make sure we lose the focus on the cell being edited when we stop edition
-						target.blur();
-						that.elt = null;
-					}
-				}
-				else {
-					// we type on a non-edited cell: if the key is not in ENTER (13), ESC (27), TAB (9)
-					// we can go in edit mode
-					if ((evt.which != 27) && (evt.which != 13) && (evt.which != 9)) {
-						target.setAttribute("data-edit", "1");
-						that.elt=target;
-						that.saveCSS();
-						that.elt.style.backgroundColor = _edtb_backgroundColor;
-						that.elt.style.borderRadius = _edtb_borderRadius;
-						that.elt.style.border = _edtb_border;
-						that.elt.style.cursor = _edtb_cursor;
-						that.setTimer();
-						rv=true;
-					}
-					// if key=ENTER, the function must return false and cancel the input of the ENTER key
-					if ((evt.which == 27) || (evt.which == 9)) {
-						rv=true;
-					}
-				}
-				if (rv == false) {
-					// to return false is not always enough, you need to call preventDefault() 
-					// and I added stopPropagation() for good measure
-					evt.preventDefault();
-					evt.stopPropagation();
-				}
-				return rv;
-			});
-		});
-
-	}
-	saveCSS() {
-		if (this.elt != null) {
-			this.text=this.elt.textContent;
-			this.background=this.elt.style.backgroundColor;
-			this.borderRadius=this.elt.style.borderRadius;
-			this.border=this.elt.style.border;
-			this.cursor=this.elt.style.cursor;
-		}
-	}
-	restoreCSS() {
-		if (this.elt != null) {
-			this.elt.style.backgroundColor=this.background;
-			this.elt.style.borderRadius=this.borderRadius;
-			this.elt.style.border=this.border;
-			this.elt.style.cursor=this.cursor;
-		}
-	}
-	clearTimer() {
-		if (this.toutid>0) {
-			clearTimeout(this.toutid);
-			this.toutid=0;
-		}
-	}
-	setTimer() {
-		const that=this;
-		this.toutid=setTimeout( function() { 
-			that.restoreCSS();
-			if (that.elt != null) {
-				that.elt.textContent=that.text;
-				that.elt.setAttribute("data-edit", "0");
-			}
-			that.elt=null;
-		}, 
-		this.toutmax);
-	}
+const KEYS = {
+	ENTER: 13,
+	ESC: 27,
+	TAB: 9,
+	UP: 38,
+	DOWN: 40,
+	LEFT: 37,
+	RIGHT: 39
 };
 
 // html imports management
@@ -257,44 +115,6 @@ function getCSSVar(sel, cssvar) {
 //set the value of a css var
 function setCSSVar(sel, cssvar, value) {
 	document.querySelector(sel).style.setProperty(cssvar, value);
-}
-
-// generation of standard header and footer
-function spawnHeader(title, logo) {
-	let hdr=document.getElementById("f1ga_header");
-	if (hdr) {
-		// container
-		let div_f1_header=document.createElement('div');	
-		div_f1_header.classList.add('f1-header');
-		// left part
-		let div_left=document.createElement('div');
-		let img=document.createElement('img');
-		img.src=logo;
-		img.classList.add('switchnav');
-		img.classList.add('f1-cu-pointer');
-		img.id="opener";
-		div_left.append(img);
-		// center
-		let div_center=document.createElement('div');
-		div_center.style.fontWeight="bold";
-		div_center.style.fontSize="2em";
-		div_center.innerText=title;
-		// right part
-		let div_right=document.createElement('div');
-		let svg=document.createElementNS(svgns, "svg");
-		svg.classList.add("f1-icon");
-		svg.classList.add("menuitem");
-		svg.classList.add("f1-menu-show");
-		let use=document.createElementNS(svgns, 'use');
-		use.setAttribute("href", "./libs/feather-sprite.svg#menu");
-		svg.append(use);
-		div_right.append(svg);
-		// append left, right and center to the container
-		div_f1_header.append(div_left);
-		div_f1_header.append(div_center);
-		div_f1_header.append(div_right);
-		hdr.append(div_f1_header);
-	}
 }
 
 // Browser detection class
