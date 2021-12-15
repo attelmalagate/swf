@@ -1,6 +1,6 @@
 <!-- 
 	Simple Web Framework
-	version: 1.1a
+	version: 1.2
 	license: Apache 2.0
 	author:  François Court
 	date: october 2021
@@ -17,8 +17,6 @@
 		"simple web framework to develop client side applications in javascript; with justified photo gallery, lightbox and checkable images; editable tables"
 />
 <base href="">
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -47,23 +45,20 @@
 }
  
 </style>
-<link rel="stylesheet" href="./swf-main.css?vswf=0d">
+<link rel="stylesheet" href="./swf-main.css?vswf=0e">
 
 <script>  
-// redundant with utils.triggerClickById() but was needed to manage internal links in the inmport html pieces
+// redundant with utils.triggerClickBySelector() but was needed to manage internal links in the inmport html pieces
 // which are loaded asynchronously, ie after the event hooks located in the document.addEventListener function
-function triggerClickById(id) {
-	document.getElementById(id).dispatchEvent(new Event("click"));
-}
-function triggerClickBySelector(id) {
-	//document.getElementById(id).dispatchEvent(new Event("click"));
-	document.querySelector(id).dispatchEvent(new Event("click"));
-}
 function selectSubTab(id) {
-	let selfilter="[data-idsubtab='"+id+"']"
-	document.querySelector(selfilter).dispatchEvent(new Event("click"));
+	try {
+		let selfilter="[data-idsubtab='"+id+"']";
+		document.querySelector(selfilter).dispatchEvent(new Event("click"));
+	}
+	catch (error) {
+		console.error("selectSubTab failed on id", id);
+	}
 }
-
 </script>
 
 </head>
@@ -88,7 +83,7 @@ function selectSubTab(id) {
 		<div class="f1-modal f1-navw" style="border-radius: 5px;top: var(--headerh); right: 50px; padding: 0px 5px 0px 5px; width: var(--navw)">
 			<ul class="f1-menu-ul">
 				<li class="f1-menuitem tabselect" data-idtab="home">Home</li>
-				<li class="f1-menuitem tabselect" data-idtab="red">Gallery</li>
+				<li class="f1-menuitem tabselect" data-idtab="gallery">Gallery</li>
 				<li class="f1-menuitem tabselect" data-idtab="contact">Contact</li>
 				<hr class="f1-hr">
 				<li class="f1-menuitem tabselect" data-idtab="about" style="display:flex;align-items:center;justify-content: space-between;">
@@ -108,7 +103,7 @@ function selectSubTab(id) {
 		</div>
 		<div style="font-weight:bold;font-size:2em">A Simple Web Framework</div>
 		<div>
-			<svg class="f1-icon f1-menuitem f1-menu-show">
+			<svg class="f1-icon f1-menuitem f1-menu-show" data-idmenu="mainmenu">
 				<use href="./feather-sprite.svg#menu"/>
 			</svg>			
 		</div>
@@ -132,7 +127,7 @@ function selectSubTab(id) {
 	</header>
 	<main id="f1ga_main" class="" style="visibility: visible;">
 	<div class="f1-wrap">
-		<div class="f1-stacked-panel" id="red" style="background: red;">
+		<div class="f1-stacked-panel" id="gallery" style="background: red;">
 			<div class="f1-inmenu-bar">
 					<div class="f1-menuitem subtabselect" data-idsubtab="jugaexample">Justified Image Gallery</div>
 					<div class="f1-menuitem subtabselect" data-idsubtab="ajax">Ajax</div>
@@ -250,7 +245,7 @@ function selectSubTab(id) {
 			</div>
 	  </div> <!-- stacked panel-->
 	  
-		<div class="f1-stacked-panel" id="contact" style="padding:10px;background:AliceBlue" data-imp-html="./swf-imp-contact.html?vswf=0d">
+		<div class="f1-stacked-panel" id="contact" style="padding:10px;background:AliceBlue" data-imp-html="./swf-imp-contact.html?vswf=0e">
 		</div> 
 		<div class="f1-stacked-panel" id="about" style="background: white">
 			<div class="f1-inmenu-bar">
@@ -264,10 +259,10 @@ function selectSubTab(id) {
 				<div class="" style="flex:10"></div>
 				<div class="f1-menuitem subtabselect" data-idsubtab="inabout-lic" style="text-align:right;">License</div>
 			</div>
-			<div class="f1-inpanel" id="inabout-gui" style="padding:10px;background:AliceBlue" data-imp-html="./swf-imp-guide.html?vswf=0d">Instructions</div>
-			<div class="f1-inpanel" id="inabout-why" style="padding:10px;background:AliceBlue" data-imp-html="./swf-imp-why.html?vswf=0d">Why another framework?</div>
-			<div class="f1-inpanel" id="inabout-dev" style="padding:10px;background:AliceBlue;" data-imp-html="./swf-imp-dev.html?vswf=0d">For developers</div>
-			<div class="f1-inpanel" id="inabout-lic" style="padding:10px;background:lightblue;" data-imp-html="./swf-imp-license.html?vswf=0d"></div>
+			<div class="f1-inpanel" id="inabout-gui" style="padding:10px;background:AliceBlue" data-imp-html="./swf-imp-guide.html?vswf=0e">Instructions</div>
+			<div class="f1-inpanel" id="inabout-why" style="padding:10px;background:AliceBlue" data-imp-html="./swf-imp-why.html?vswf=0e">Why another framework?</div>
+			<div class="f1-inpanel" id="inabout-dev" style="padding:10px;background:AliceBlue;" data-imp-html="./swf-imp-dev.html?vswf=0e">For developers</div>
+			<div class="f1-inpanel" id="inabout-lic" style="padding:10px;background:lightblue;" data-imp-html="./swf-imp-license.html?vswf=0e"></div>
 		</div>
 	  
 	</div>
@@ -275,7 +270,7 @@ function selectSubTab(id) {
 	<nav id="f1ga_nav">
 	   <ul class="f1-menu-ul">
 			<li class="f1-menuitem tabselect" data-idtab="home">Home</li>
-			<li class="f1-menuitem tabselect" data-idtab="red">Gallery</li>
+			<li class="f1-menuitem tabselect" data-idtab="gallery">Gallery</li>
 			<li class="f1-menuitem tabselect" data-idtab="contact">Contact</li>
 			<hr class="f1-hr">
 			<li class="f1-menuitem tabselect" data-idtab="about" style="display:flex;align-items:center;justify-content: space-between;">
@@ -297,336 +292,7 @@ function selectSubTab(id) {
 	</footer>
 	
 
+<script type="module" src="./swf-main.js"></script>
 
-<script type="module">
-
-	import * as utils from './swf-utils.js';
-	import * as tb from './swf-edtb.js';
-	import * as jg from './swf-juga.js';
-
-	// options
-	const nav_opt = {
-		HOVER:1,
-		CLICK:2, // switch nav panel on click main icon (top left)
-		CLOSE_ON_SEL:4, // nav panel hides after selecting a item
-		HIDDEN:8, //nav panel always hidden
-		HOME:16 //send back to home panel
-	}
-	var opt_nav=nav_opt.CLOSE_ON_SEL;//nav_opt.HIDDEN|nav_opt.HOME;
-	// utilities
-	//var headerH, footerH, paddingDef;
-	var navW;
-	var idTout;
-	// indicates if the shift key is pressed
-	var shiftPressed=false;
-	function getCSSVars() {
-		// get the values of the CSS variables 
-		navW=parseInt(utils.getCSSVar(':root', '--navw'));
-	}
-	function hideNav() {
-		utils.setCSSVar(':root', '--navw', '0px');
-		//navW=0;
-		document.getElementById("f1ga_nav").style.visibility="hidden";
-		utils.setWidthByClassName("f1-navw", navW);
-		//$("#f1ga_nav").css("visibility", "hidden");
-		//$(".f1-navw").css("width", navW+'px');
-		//sizeElements();
-	}
-	function showNav() {
-		utils.setCSSVar(':root', '--navw', navW+'px');
-		//navW=160;
-		document.getElementById("f1ga_nav").style.visibility="visible";
-		//$("#f1ga_nav").css("visibility", "visible");
-		//sizeElements();
-	}
-	function switchNav() {
-		if (opt_nav & nav_opt.HOME) {
-			utils.triggerClickBySelector("[data-idtab='home']");
-		}
-		if ((opt_nav & nav_opt.HIDDEN) != nav_opt.HIDDEN) {
-			var w=navW;
-			var navel=document.getElementById("f1ga_nav");
-			if (navel.style.visibility !== "hidden") {
-				w=0;
-				navel.style.visibility="hidden";
-				utils.setWidthByClassName("f1-navw", navW);
-			} 
-			else {
-				navel.style.visibility="visible";
-			}
-			utils.setCSSVar(':root', '--navw', w+'px');
-		}
-	}
-	// debug function to add lines in a table 
-	function fillTable(tbname, nblines, mult) {
-		var tb=document.getElementById(tbname).querySelectorAll("tbody")[0];
-		for (var i=0; i<nblines; i++) {
-			var tr=document.createElement('tr');
-			for (var j=1; j<=3; j++) {
-				var td=document.createElement('td');
-				var att=document.createAttribute("contenteditable");
-				att.value = "true"; 
-				td.setAttributeNode(att);
-				td.textContent = (i*mult+j);
-				tr.append(td);
-			}
-			tb.append(tr);
-		}
-	}
-
-	function fillTables() {
-		fillTable("tbpink", 20, 10);
-		fillTable("tbgreen", 10, 100);
-	}
-	
-	function sizeElements() {
-		// set body height to window.innerHeight (issue on Android mobile/tablet for 100vh)
-		document.body.style.height=window.innerHeight+"px";
-	}
-	
-	function selectDefault () {
-		utils.triggerClickBySelector("[data-idtab='red']");
-		utils.triggerClickBySelector("[data-idsubtab='inabout-gui']");
-		utils.triggerClickBySelector("[data-idsubtab='jugaexample']");
-		utils.triggerClickBySelector("[data-idsubtab='inpanel01']");
-	}
-
-	// modal forms management functions
-	function openModal(e, el) {
-		//$('#testmodal').css('display','block');
-		//$('#mainmenu').css('display','block');
-		/*
-		var posX=e.pageX-20;
-		$('.f1-modal').css('top',e.pageY-40);
-		if ((posX+160)>(window.innerWidth-20)) {
-			posX=window.innerWidth-20-160;
-		}
-		$('.f1-modal').css('left',posX);
-		$('.f1-modal').css("position", "absolute");
-		*/
-		document.getElementById("mainmenu").style.display="block";
-	}
-	function closeModal(elt) {
-		elt.style.display="none";
-	}
-	function isShiftPressed() {
-		return shiftPressed;
-	}
-
-	// Creation of a justified image gallery in the "jugaexample" tab, with the shiftPressed callback
-	// the juga object creates all the required elements for the gallery and the lightbox
-	var juga=new jg._juga("jugaexample", isShiftPressed, {jugaHeight: 90, checkable:false, lightBox:true});
-
-	document.addEventListener("DOMContentLoaded", function() {
-		getCSSVars();
-		// debug
-		fillTables();	
-
-		//manage HTML imports
-		var tokens =[{
-			token: "{{name}}",
-			value: "Fran&#xE7;ois Court"
-		},{
-			token: "{{email}}",
-			value: "attel@malagate.com"
-		},{
-			token: "{{year}}",
-			value: "2021"
-		}];
-		utils.importsHTML(tokens);
-		// debug 
-		$(document).mousemove(function(e){
-			//console.log("mouse at x="+ e.pageX + " y=" +e.pageY);
-		});
-		
-		// resize event, allow the update of the photo gallery and calls the szieElements function
-		// to manage additional actions which would be needed (so far, only to manage a size issue on
-		// Android mobile/tablet for 100vh)
-		window.addEventListener('resize', function(){
-			sizeElements();
-			juga.resize();
-		});
-		
-		// keyup/keydonw events to manage the shiftkey throught the shiftPressed variable and callback, used
-		//	by the photo gallery (for the bulk selection of pictures)
-		window.addEventListener('keydown', function(e){
-			if (e.shiftKey) {
-				shiftPressed=true;
-			}
-		});
-		window.addEventListener('keyup', function(e){
-			shiftPressed=false;
-		});
-		
-		// event for the switchNav function, ie management of the click on the left portion of the header
-		$(".switchnav").click(function(){
-			switchNav();
-		});
-		
-		// manages the tab selection menus
-		// there are two menus available to select which tab to display
-		// inside the main area:
-		// - one menu is located in the navigation panel on the side
-		// - the other is floating, accessed from the menu icon located in the right portion of the header
-		// the two menus are identical and remain synchronized (ie current selection in bold)
-		$(".tabselect").click(function(){
-			var idtab=$(this).attr("data-idtab");
-			$(".f1-stacked-panel").css("visibility", "hidden");
-			$(".f1-stacked-panel").css("z-index", "-1");
-			$("#"+idtab).css("visibility", "visible");
-			$("#"+idtab).css("z-index", "2");
-			$(".tabselect").css("font-weight", "normal");
-			$(".tabselect").css("cursor", "pointer");
-			$("[data-idtab='"+idtab+"']").css("font-weight", "bold");
-			$("[data-idtab='"+idtab+"']").css("cursor", "default");
-			if (opt_nav & nav_opt.CLOSE_ON_SEL) {
-				hideNav();
-			}
-		});
-		$(".f1-linkmenu").click(function() {
-			console.log($(this).attr("data-id"));
-		});
-		// manages the selection of subtabs and related menu (the in-menu)
-		// subtabs are tabs inside the main tabs; they are selected through an in-menu at the top of their
-		// parent tab
-		$(".subtabselect").click(function() {
-			var idsubtab=$(this).attr("data-idsubtab");
-			$(this).css("font-weight", "bold");
-			$(this).css("cursor", "default");
-			$(this).siblings(".subtabselect").css("font-weight", "normal");
-			$(this).siblings(".subtabselect").css("cursor", "pointer");
-			$("#"+idsubtab).siblings(".f1-inpanel").css("visibility", "hidden");
-			$("#"+idsubtab).siblings(".f1-inpanel").css("z-index", "-1");
-			$("#"+idsubtab).css("visibility", "visible");
-			$("#"+idsubtab).css("z-index", "1");
-			// hide/show other related items on the in-menu bar
-			$(this).siblings("div[data-id]").css("display","none");
-			$(this).siblings("div[data-id='"+idsubtab+"']").css("display","block");
-		});
-		$(".switchnav").hover(function(){
-			// hover in
-			if (opt_nav == nav_opt.HOVER) {
-				clearTimeout(idTout);
-				showNav();
-			}
-		}, function() {
-			// hover out
-			if (opt_nav == nav_opt.HOVER) {
-				clearTimeout(idTout);
-				idTout=setTimeout(function() {
-					hideNav();
-				}, 1000);
-			}
-		});
-		$("#f1ga_nav").hover(function(){
-			// hover in
-			if (opt_nav == nav_opt.HOVER) {
-				clearTimeout(idTout);
-			}
-		}, function() {
-			// hover out
-			if (opt_nav == nav_opt.HOVER) {
-				clearTimeout(idTout);
-				idTout=setTimeout(function() {
-					hideNav();
-				}, 1000);
-			}
-		});
-		
-		// select uimode management for the photo gallery
-		// edition(checkable images-no lightbox)/consultation(no checkable images-lightbox)
-		// get the select element
-		const uimodeSelect=document.getElementById("uimode");
-		// define the event handler when it changes
-		uimodeSelect.addEventListener('change', function(event) {
-			var value = uimodeSelect.options[uimodeSelect.selectedIndex].value;
-			if (value == 1) {
-				// consultation mode, images are not checkable and the lightox is started when you click on one
-				juga.setCheckable(false);
-				juga.setLightbox(true);
-			}
-			else {
-				// edition mode, images are checkable, no lightox on click
-				juga.setCheckable(true);
-				juga.setLightbox(false);
-			}
-		});
-		// default value on page load
-		uimodeSelect.selectedIndex=1;
-		
-		// modal dialog management
-		$(".f1-menu-show").click(function(e){
-			openModal(e, $(this));
-		});
-		$(".f1-modal-background").click(function(e){
-			closeModal($(this).get(0));
-		});
-		// When the user clicks on <span> (x), close the modal
-		$(".f1-modal-close").click(function(){
-			closeModal();
-		});
-		$("#btcancel").click(function(){
-			closeModal();
-		});
-		$("#btupdate").click(function(){
-			closeModal();
-		});
-		
-		// management of editable tables; everything is managed in the class
-		// including the invocation of the listener to click and keydown events
-		// only here the application specific callback called when a cell is updated
-		function onUpdate(elt) {
-			console.log(elt.textContent);
-		}
-		var tbed=new tb._edtb(onUpdate, {toutMax: 5000});
-		
-		// test ajax
-		$("#btajax").click(function () {
-			console.log('ajax');
-			
-			$.ajax({
-				url: './swf-dbg-ajax.php',
-				error: function() {
-					console.log("ajax error");
-				},
-				dataType: 'json',
-				success: function(data) {
-					console.log(data);
-					let text = "<table border='1'>"
-					for (let x in data) {
-					 text += "<tr><td>" + data[x].idvariant + "</td><td>" + data[x].file + "</td><td>" + data[x].preview + "</td></tr>";
-					}
-					text += "</table>"
-					document.getElementById("ajax").innerHTML = text;
-				},
-				type: 'GET'
-			});
-		});
-		
-		// validation of the default selected tabs and sub-tabs
-		selectDefault();
-		// hide nav panel if option HIDDEN is selected
-		if (opt_nav & nav_opt.HIDDEN) {
-			hideNav();
-		}
-		$("#btimgsize").click(function(){
-			juga.sizeImages();
-		});		
-		$("#btimgcheck").click(function(){
-			juga.checkAll();
-		});	
-		$("#btimguncheck").click(function(){
-			juga.uncheckAll();
-		});	
-		sizeElements();
-		// hide the blocking div now that the page is loaded
-		document.getElementById("block").classList.add('f1-slow-hide');
-		console.log(utils.version());
-		console.log(jg.version());
-		console.log(tb.version());
-	});
-	
-	
-</script>
 </body> 
 </html>
