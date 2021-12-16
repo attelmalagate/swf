@@ -1,7 +1,7 @@
 /*
  * Justified Photo Gallery class, part of the Simple Web Framework
  *
- * version: 1.3
+ * version: 1.4
  * license: Apache 2.0
  * author:  François Court
  * date: october 2021
@@ -11,7 +11,7 @@
 export { _juga, version };
 import * as utils from './swf-utils.js';
 function version() {
-	return "swf juga v1.3";
+	return "swf juga v1.4";
 }
 // class storing the definition of an image
 class _img {

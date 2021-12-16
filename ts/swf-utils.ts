@@ -8,14 +8,36 @@
  *
  */
 "use strict";
-export { importsHTML, triggerClickById, triggerClickBySelector, setWidthByClassName, addEventListenerById, eltBySelAppend, eltBySelText, eltBySelAttr, getCSSVar, setCSSVar, format, version, KEYS, _ui, _nodes, dbg };
+
+export { 
+	importsHTML, 
+	triggerClickById, 
+	triggerClickBySelector, 
+	setWidthByClassName,
+	addEventListenerById,
+	eltBySelAppend,
+	eltBySelText,
+	eltBySelAttr,
+	getCSSVar,
+	setCSSVar,
+	format,
+	version,
+	KEYS,
+	_ui,
+	_nodes,
+	dbg
+};
+
 function version() {
 	return "swf utils v1.4";
 }
+
 function dbg() {
 	return "dbg01";
 }
-const svgns = "http://www.w3.org/2000/svg";
+
+const svgns="http://www.w3.org/2000/svg";
+
 const KEYS = {
 	ENTER: 13,
 	ESC: 27,
@@ -25,9 +47,10 @@ const KEYS = {
 	LEFT: 37,
 	RIGHT: 39
 };
+
 // html imports management
 // tokens is a list of token/value to use with a regex before inserting the html value 
-function importsHTML(tokens = null) {
+function importsHTML(tokens:{token:string,value:string}[]|null=null) {
 	// find the first element with the custom attribute data-imp-html
 	const nodes = document.querySelectorAll("[data-imp-html]");
 	for (let i = 0; i < nodes.length; i++) {
@@ -37,18 +60,18 @@ function importsHTML(tokens = null) {
 		if (filename) {
 			// send an HTTP request
 			const xhttp = new XMLHttpRequest();
-			xhttp.onreadystatechange = function () {
+			xhttp.onreadystatechange = function() {
 				if (this.readyState == 4) {
 					if (this.status == 200) {
-						let s = this.responseText;
+						let s=this.responseText;
 						// if there are tokens passed to the function, loop through and
 						// make the substitution (a token is a pair of identifier "{{ident}}" and text value
 						// to replace {{ident}} with
 						if (tokens != null) {
-							tokens.forEach(function (item) {
+							tokens.forEach(function(item) {
 								// build the regex on the fly
 								const reg = new RegExp(item.token, 'g');
-								s = s.replace(reg, item.value);
+								s=s.replace(reg, item.value);
 							});
 						}
 						// udpate the target element
@@ -63,122 +86,159 @@ function importsHTML(tokens = null) {
 					elmnt.removeAttribute("data-imp-html");
 					importsHTML(tokens);
 				}
-			};
+			}
 			xhttp.open("GET", filename, true);
 			xhttp.send();
 			// exit the loop - the next element with html to import is managed in the callback above
 			// with the recursive call to importsHTML
 			return;
-		}
+		 }
 	}
-}
+}	
+
 // trigger a click on an element selected by id
-function triggerClickById(id) {
+function triggerClickById(id:string) {
 	try {
-		document.getElementById(id).dispatchEvent(new Event("click"));
+		document.getElementById(id)!.dispatchEvent(new Event("click"));
 	}
 	catch (error) {
-		console.error("triggerClickById error with id", id);
+		console.error("triggerClickById error with id", id);		
 	}
 }
 // trigger a click on the first element meeting the filter in parameter
-function triggerClickBySelector(selfilter) {
+function triggerClickBySelector(selfilter:string) {
 	try {
-		document.querySelector(selfilter).dispatchEvent(new Event("click"));
+		document.querySelector(selfilter)!.dispatchEvent(new Event("click"));
 	}
 	catch (error) {
-		console.error("triggerClickBySelector error with filter", selfilter);
+		console.error("triggerClickBySelector error with filter", selfilter);		
 	}
 }
+
 // sets the widht of all elements belonging to the class in parameter
-function setWidthByClassName(name, w) {
-	const elts = document.getElementsByClassName(name);
-	Array.prototype.every.call(elts, function (el) {
-		el.style.width = w + 'px';
+function setWidthByClassName(name:string, w:number) {
+	const elts=document.getElementsByClassName(name);
+	Array.prototype.every.call(elts, function(el){
+		el.style.width=w+'px';
 		return true;
 	});
 }
-function addEventListenerById(id, event, listener) {
-	const elt = document.getElementById(id);
+
+function addEventListenerById(id:string, event:string, listener:(e: Event) => void) {
+	const elt=document.getElementById(id);
 	if (elt !== null) {
 		elt.addEventListener(event, listener);
 	}
 	else {
-		console.log("addEventListenerById - element", id, "does not exist");
+		console.log("addEventListenerById - element", id, "does not exist");		
 	}
 }
-function eltBySelAppend(selector, toappend) {
-	[].forEach.call(document.querySelectorAll(selector), function (elt) {
+
+function eltBySelAppend(selector:string, toappend:string) {
+	[].forEach.call(document.querySelectorAll(selector), function(elt:HTMLElement) {
 		elt.innerHTML = toappend;
 	});
 }
-function eltBySelText(selector, text) {
-	[].forEach.call(document.querySelectorAll(selector), function (elt) {
+
+function eltBySelText(selector:string, text:string) {
+	[].forEach.call(document.querySelectorAll(selector), function(elt:HTMLElement) {
 		elt.textContent = text;
 	});
 }
-function eltBySelAttr(selector, attr, value) {
-	[].forEach.call(document.querySelectorAll(selector), function (elt) {
+
+function eltBySelAttr(selector:string, attr:string, value:string) {
+	[].forEach.call(document.querySelectorAll(selector), function(elt:HTMLElement) {
 		elt.setAttribute(attr, value);
 	});
 }
+
 // get the value of a css var
-function getCSSVar(sel, cssvar) {
-	return String(getComputedStyle(document.querySelector(sel)).getPropertyValue(cssvar));
+function getCSSVar(sel:string, cssvar:string) {
+	return String(getComputedStyle(document.querySelector(sel)!).getPropertyValue(cssvar));
 }
 //set the value of a css var
-function setCSSVar(sel, cssvar, value) {
+function setCSSVar(sel:string, cssvar:string, value:string) {
 	try {
-		document.querySelector(sel).style.setProperty(cssvar, value);
+		(document.querySelector(sel) as HTMLElement).style.setProperty(cssvar, value);
 	}
 	catch (error) {
-		console.error("setCSSVar error with selector", sel, "cssvar", cssvar, "value", value);
+		console.error("setCSSVar error with selector", sel, "cssvar", cssvar, "value", value);		
 	}
 }
-function resizeWindow() {
+function resizeWindow(){
 	window.dispatchEvent(new Event('resize'));
 }
+
 class _nodes {
-	constructor(selector, origin = document) {
-		this.nodes = origin.querySelectorAll(selector);
+	nodes:NodeList;
+	constructor(selector:string, origin:Element|Document=document) {
+		this.nodes=origin.querySelectorAll(selector);
 	}
-	text(value) {
-		[].forEach.call(this.nodes, function (elt) {
-			elt.textContent = value;
+	text(value:string) {
+		[].forEach.call(this.nodes, function(elt:HTMLElement) {
+			elt.textContent=value;
 		});
 		return this;
 	}
-	attr(attr, value) {
-		[].forEach.call(this.nodes, function (elt) {
+	attr(attr:string, value:string) {
+		[].forEach.call(this.nodes, function(elt:HTMLElement) {
 			elt.setAttribute(attr, value);
-		});
+		});		
 		return this;
 	}
-	each(f) {
-		[].forEach.call(this.nodes, function (elt) {
+	each(f:(e: HTMLElement) => void){
+		[].forEach.call(this.nodes, function(elt) {
 			f(elt);
-		});
+		});				
 	}
 }
+
+type  _ui_options = {
+	nav: number;
+}
+
 //-- swf UI management --//
 class _ui {
-	constructor(poptions = {}) {
+	// navigation panel options
+	static nav_opt = {
+		FREE:1, // available (used to be a HOVER option, now deprecated)
+		CLICK:2, // switch nav panel on click main icon (top left)
+		CLOSE_ON_SEL:4, // nav panel hides after selecting a item
+		HIDDEN:8, //nav panel always hidden
+		HOME:16 //send back to home panel		
+	}
+	// general options
+	static opt = {
+		RESIZE:true
+	}
+	
+	options:_ui_options;
+	shiftPressed:boolean;
+	navW:number;
+	mouseX:number;
+	mouseY:number;
+	// navigation panel
+	navelt:HTMLElement|null;
+	// blocking element (to hide/reveal the page)
+	blockelt:HTMLElement|null;
+	
+	constructor(poptions: Partial<_ui_options>={}){
 		// options management
 		this.options = {
-			nav: ((poptions.nav === undefined) ? 0 : poptions.nav)
+			nav:((poptions.nav === undefined) ? 0 : poptions.nav)
 		};
 		// shifr key management
-		this.shiftPressed = false;
+		this.shiftPressed=false;
 		// width of the navigation panel
-		this.navW = parseInt(getCSSVar(':root', '--navw'));
+		this.navW=parseInt(getCSSVar(':root', '--navw'));
 		// mouse position
-		this.mouseX = 0;
-		this.mouseY = 0;
-		this.navelt = document.getElementById("f1ga_nav");
+		this.mouseX=0;
+		this.mouseY=0;
+		this.navelt=document.getElementById("f1ga_nav");
 		if (!this.navelt) {
 			console.error("_ui.constructor error - no navigation element");
 		}
-		this.blockelt = document.getElementById("block");
+		this.blockelt=document.getElementById("block");
 		if (!this.blockelt) {
 			console.warn("_ui.constructor error - no blocking element");
 		}
@@ -187,7 +247,7 @@ class _ui {
 	// setup generic event handlers
 	addEvents() {
 		// save the current object to be used later in the event callbacks
-		const that = this;
+		const that=this;
 		// debug 
 		/*
 		document.addEventListener("mousemove", function(e) {
@@ -198,42 +258,44 @@ class _ui {
 		*/
 		// keyup/keydown events to manage the shiftkey throught the shiftPressed variable and callback, used
 		//	by the photo gallery (for the bulk selection of pictures)
-		window.addEventListener('keydown', function (e) {
+		window.addEventListener('keydown', function(e){
 			if (e.shiftKey) {
-				that.shiftPressed = true;
+				that.shiftPressed=true;
 			}
 		});
-		window.addEventListener('keyup', function () {
-			that.shiftPressed = false;
+		window.addEventListener('keyup', function(){
+			that.shiftPressed=false;
 		});
+		
 		// event for the switchNav function, ie management of the click on the left portion of the header
-		[].forEach.call(document.querySelectorAll('.switchnav'), function (elt) {
-			elt.addEventListener('click', function () {
+		[].forEach.call(document.querySelectorAll('.switchnav'), function(elt:HTMLElement) {
+			elt.addEventListener('click', function(){
 				that.switchNav(_ui.opt.RESIZE);
 			});
 		});
+		
 		// manages the tab selection menus
 		// there are two menus available to select which tab to display
 		// inside the main area:
 		// - one menu is located in the navigation panel on the side
 		// - the other is floating, accessed from the menu icon located in the right portion of the header
 		// the two menus are identical and remain synchronized (ie current selection in bold)
-		[].forEach.call(document.querySelectorAll('.tabselect'), function (tabselect) {
-			tabselect.addEventListener('click', function () {
-				const idtab = tabselect.getAttribute("data-idtab");
-				const tab = idtab ? document.getElementById(idtab) : null;
+		[].forEach.call(document.querySelectorAll('.tabselect'), function(tabselect:HTMLElement) {
+			tabselect.addEventListener('click', function(){
+				const idtab=tabselect.getAttribute("data-idtab");
+				const tab=idtab?document.getElementById(idtab):null;
 				if (tab) {
-					[].forEach.call(document.querySelectorAll('.f1-stacked-panel'), function (elt) {
+					[].forEach.call(document.querySelectorAll('.f1-stacked-panel'), function(elt:HTMLElement) {
 						elt.style.setProperty("visibility", "hidden");
 						elt.style.setProperty("z-index", "-1");
 					});
 					tab.style.setProperty("visibility", "visible");
 					tab.style.setProperty("z-index", "2");
-					[].forEach.call(document.querySelectorAll('.tabselect'), function (elt) {
+					[].forEach.call(document.querySelectorAll('.tabselect'), function(elt:HTMLElement) {
 						elt.style.setProperty("font-weight", "normal");
 						elt.style.setProperty("cursor", "pointer");
 					});
-					[].forEach.call(document.querySelectorAll("[data-idtab='" + idtab + "']"), function (elt) {
+					[].forEach.call(document.querySelectorAll("[data-idtab='"+idtab+"']"), function(elt:HTMLElement) {
 						elt.style.setProperty("font-weight", "bold");
 						elt.style.setProperty("cursor", "default");
 					});
@@ -248,36 +310,36 @@ class _ui {
 				}
 			});
 		});
-		[].forEach.call(document.querySelectorAll('.f1-linkmenu'), function (elt) {
-			elt.addEventListener('click', function () {
+		[].forEach.call(document.querySelectorAll('.f1-linkmenu'), function(elt:HTMLElement) {
+			elt.addEventListener('click', function(){
 				console.log(elt.getAttribute("data-id"));
 			});
 		});
 		// manages the selection of subtabs and related menu (the in-menu)
 		// subtabs are tabs inside the main tabs; they are selected through an in-menu at the top of their
 		// parent tab
-		[].forEach.call(document.querySelectorAll('.subtabselect'), function (tabselect) {
-			tabselect.addEventListener('click', function () {
+		[].forEach.call(document.querySelectorAll('.subtabselect'), function(tabselect:HTMLElement) {
+			tabselect.addEventListener('click', function(){
 				// select the siblings of the current menu element with the same class and set their style to 
 				// not selected (ie font weight normal and cursor pointer)
-				[].forEach.call(tabselect.parentElement.querySelectorAll('.subtabselect'), function (sib) {
+				[].forEach.call(tabselect.parentElement!.querySelectorAll('.subtabselect'), function(sib:HTMLElement) {
 					sib.style.setProperty("font-weight", "normal");
 					sib.style.setProperty("cursor", "pointer");
 				});
 				//takes more time than the equivqlent syntax above (5-10% more, on a 100000 loop, 180ms total)
-				new _nodes('.subtabselect', tabselect.parentElement).each(function (sib) {
+				new _nodes('.subtabselect', tabselect.parentElement!).each(function(sib:HTMLElement) {
 					sib.style.setProperty("font-weight", "normal");
 					sib.style.setProperty("cursor", "pointer");
 				});
 				/**/
 				// set the current menu element to selected (fontweight bold and cursor normal)
 				tabselect.style.setProperty("font-weight", "bold");
-				tabselect.style.setProperty("cursor", "default");
+				tabselect.style.setProperty("cursor", "default"); 
 				// select the subtab to show it, and hide its siblings (class f1-inpanel)
-				const idsubtab = tabselect.getAttribute("data-idsubtab");
-				const subtab = idsubtab ? document.getElementById(idsubtab) : null;
+				const idsubtab=tabselect.getAttribute("data-idsubtab");
+				const subtab=idsubtab?document.getElementById(idsubtab):null;
 				if (subtab) {
-					[].forEach.call(subtab.parentElement.querySelectorAll('.f1-inpanel'), function (sib) {
+					[].forEach.call(subtab.parentElement!.querySelectorAll('.f1-inpanel'), function(sib:HTMLElement) {
 						sib.style.setProperty("visibility", "hidden");
 						sib.style.setProperty("z-index", "-1");
 					});
@@ -288,37 +350,38 @@ class _ui {
 					console.error("_ui.addEvents.subtabselect.click error", tabselect);
 				}
 				// hide/show other related items on the in-menu bar
-				[].forEach.call(tabselect.parentElement.querySelectorAll('div[data-id]'), function (sib) {
+				[].forEach.call(tabselect.parentElement!.querySelectorAll('div[data-id]'), function(sib:HTMLElement) {
 					sib.style.setProperty("display", "none");
 				});
-				[].forEach.call(tabselect.parentElement.querySelectorAll("div[data-id='" + idsubtab + "']"), function (sib) {
+				[].forEach.call(tabselect.parentElement!.querySelectorAll("div[data-id='"+idsubtab+"']"), function(sib:HTMLElement) {
 					sib.style.setProperty("display", "block");
 				});
 			});
 		});
 		// modal dialog management
-		[].forEach.call(document.querySelectorAll('.f1-menu-show'), function (elt) {
-			elt.addEventListener('click', function () {
+		[].forEach.call(document.querySelectorAll('.f1-menu-show'), function(elt:HTMLElement) {
+			elt.addEventListener('click', function(){
 				that.openModalMenu(elt.getAttribute("data-idmenu"));
-			});
+			});		
 		});
-		[].forEach.call(document.querySelectorAll('.f1-modal-background'), function (elt) {
-			elt.addEventListener('click', function () {
+		[].forEach.call(document.querySelectorAll('.f1-modal-background'), function(elt:HTMLElement) {
+			elt.addEventListener('click', function(){
 				that.closeModal(elt);
-			});
+			});		
 		});
 		// When the user clicks on <span> (x), close the modal
-		[].forEach.call(document.querySelectorAll('.f1-modal-close'), function (elt) {
-			elt.addEventListener('click', function () {
+		[].forEach.call(document.querySelectorAll('.f1-modal-close'), function(elt:HTMLElement) {
+			elt.addEventListener('click', function(){
 				that.closeModal(elt);
-			});
+			});		
 		});
-		addEventListenerById('btcancel', 'click', function () {
+		addEventListenerById('btcancel', 'click', function(){
 			that.closeModal();
 		});
-		addEventListenerById('btupdate', 'click', function () {
+		addEventListenerById('btupdate', 'click', function(){
 			that.closeModal();
 		});
+		
 	}
 	// keyboard management
 	keyShiftPressed() {
@@ -335,7 +398,7 @@ class _ui {
 		return this.options.nav & _ui.nav_opt.CLOSE_ON_SEL;
 	}
 	// navigation panel management
-	hideNav(opt_resize = false) {
+	hideNav(opt_resize=false) {
 		setCSSVar(':root', '--navw', '0px');
 		if (this.navelt) {
 			this.navelt.style.setProperty("visibility", "hidden");
@@ -345,8 +408,8 @@ class _ui {
 			resizeWindow();
 		}
 	}
-	showNav(opt_resize = false) {
-		setCSSVar(':root', '--navw', this.navW + 'px');
+	showNav(opt_resize=false) {
+		setCSSVar(':root', '--navw', this.navW+'px');
 		if (this.navelt) {
 			this.navelt.style.setProperty("visibility", "visible");
 		}
@@ -354,23 +417,23 @@ class _ui {
 			resizeWindow();
 		}
 	}
-	switchNav(opt_resize = false) {
+	switchNav(opt_resize=false) {
 		if (this.navOptHome()) {
 			triggerClickBySelector("[data-idtab='home']");
 		}
 		if (!this.navOptHidden()) {
-			var w = this.navW;
+			var w=this.navW;
 			if (this.navelt) {
 				if (this.navelt.style.getPropertyValue('visibility') !== "hidden") {
-					w = 0;
+					w=0;
 					this.navelt.style.setProperty("visibility", "hidden");
 					setWidthByClassName("f1-navw", this.navW);
-				}
+				} 
 				else {
 					this.navelt.style.setProperty("visibility", "visible");
 				}
 			}
-			setCSSVar(':root', '--navw', w + 'px');
+			setCSSVar(':root', '--navw', w+'px');
 			if (opt_resize) {
 				resizeWindow();
 			}
@@ -379,20 +442,20 @@ class _ui {
 	// windows resize
 	resize() {
 		// set body height to window.innerHeight (issue on Android mobile/tablet for 100vh)
-		document.body.style.height = window.innerHeight + "px";
+		document.body.style.height=window.innerHeight+"px";		
 	}
 	// modal menu management functions
-	openModalMenu(id) {
+	openModalMenu(id:string|null) {
 		try {
-			document.getElementById(id).style.display = "block";
+			document.getElementById(id!)!.style.display="block";
 		}
 		catch (error) {
 			console.error("openModalMenu on id", id);
 		}
 	}
-	closeModal(elt = null) {
+	closeModal(elt:HTMLElement|null=null) {
 		if (elt) {
-			elt.style.display = "none";
+			elt.style.display="none";
 		}
 	}
 	// Query parameters management
@@ -402,13 +465,13 @@ class _ui {
 	// the value for the parameter stab must correspond to the id of one of the elemenet of the f1-inpanel class
 	checkQueryParameters() {
 		const url = new URL(window.location.href);
-		const tab = url.searchParams.get('tab');
-		const stab = url.searchParams.get('stab');
+		const tab=url.searchParams.get('tab');
+		const stab=url.searchParams.get('stab');
 		if (tab !== null) {
-			triggerClickBySelector("[data-idtab='" + tab + "']");
+			triggerClickBySelector("[data-idtab='"+tab+"']");
 		}
 		if (stab !== null) {
-			triggerClickBySelector("[data-idsubtab='" + stab + "']");
+			triggerClickBySelector("[data-idsubtab='"+stab+"']");
 		}
 	}
 	// Show/hide window
@@ -417,68 +480,67 @@ class _ui {
 			this.blockelt.classList.add('f1-slow-hide');
 		}
 	}
-	hide(duration = 0) {
+	hide(duration=0) {
 		if (this.blockelt) {
 			this.blockelt.classList.remove('f1-slow-hide');
-			const that = this;
-			if (duration > 0) {
-				setTimeout(function () {
+			const that=this;
+			if (duration>0) {
+				setTimeout( function() { 
 					that.show();
-				}, duration);
+				}, 
+				duration);
 			}
 		}
 	}
-}
-// navigation panel options
-_ui.nav_opt = {
-	FREE: 1,
-	CLICK: 2,
-	CLOSE_ON_SEL: 4,
-	HIDDEN: 8,
-	HOME: 16 //send back to home panel		
 };
-// general options
-_ui.opt = {
-	RESIZE: true
-};
-;
+
+
 // formatting functions
 // Lightweight number formatter library 
 // https://github.com/Mottie/javascript-number-formatter
+
 const maskRegex = /[0-9\-+#]/;
 const notMaskRegex = /[^\d\-+#]/g;
-function getIndex(mask) {
+
+function getIndex(mask: string) {
 	return mask.search(maskRegex);
 }
+
 class _lnf_mask {
-	constructor() {
-		this.mask = '';
-		this.prefix = '';
-		this.suffix = '';
-		this.maskHasNegativeSign = false;
-		this.maskHasPositiveSign = false;
-		this.decimal = '';
-		this.separator = '';
-		this.integer = '';
-		this.fraction = '';
-	}
+	mask: string='';
+	prefix: string='';
+	suffix: string='';
+	maskHasNegativeSign: boolean=false;
+	maskHasPositiveSign: boolean=false;
+	decimal: string='';
+	separator: string='';
+	integer: string='';
+	fraction: string='';
 }
+
 class _lnf_value {
-	constructor(value) {
-		this.svalue = '';
-		this.sign = '';
-		this.result = '';
-		this.integer = '';
-		this.fraction = '';
-		this.value = value;
+	value: number;
+	svalue:string='';
+	sign: string='';
+	result: string='';
+	integer: string='';
+	fraction: string='';
+	constructor (value: number){
+		this.value=value;
 	}
 }
+
+type _lnf_options = {
+	enforceMaskSign: boolean;
+}
+
 function processMask(mask = "#.##") {
 	const maskObj = new _lnf_mask();
 	//	{mask: "" string; maskHasNegativeSign: false boolean, maskHasPositiveSign:false boolean};
 	const len = mask.length;
 	const start = getIndex(mask);
 	maskObj.prefix = start > 0 ? mask.substring(0, start) : "";
+
 	// Reverse string: not an ideal method if there are surrogate pairs
 	const end = getIndex(mask.split("").reverse().join(""));
 	const offset = len - end;
@@ -486,9 +548,11 @@ function processMask(mask = "#.##") {
 	// Add 1 to offset if mask has a trailing decimal/comma
 	const indx = offset + ((substr === "." || (substr === ",")) ? 1 : 0);
 	maskObj.suffix = end > 0 ? mask.substring(indx, len) : "";
+
 	maskObj.mask = mask.substring(start, indx);
 	maskObj.maskHasNegativeSign = maskObj.mask.charAt(0) === "-";
 	maskObj.maskHasPositiveSign = maskObj.mask.charAt(0) === "+";
+
 	// Search for group separator & decimal; anything not digit,
 	// not +/- sign, and not #
 	let result = maskObj.mask.match(notMaskRegex);
@@ -496,71 +560,84 @@ function processMask(mask = "#.##") {
 	maskObj.decimal = (result && result[result.length - 1]) || ".";
 	// Treat the left most symbol as group separator
 	maskObj.separator = (result && result[1] && result[0]) || ",";
+
 	// Split the decimal for the format string if any
 	result = maskObj.mask.split(maskObj.decimal);
 	maskObj.integer = result[0];
 	maskObj.fraction = result[1];
 	return maskObj;
 }
-function processValue(value, maskObj, options) {
+
+function processValue(value:number, maskObj: _lnf_mask, options: _lnf_options) {
 	let isNegative = false;
 	const valObj = new _lnf_value(value);
+	
 	if (value < 0) {
 		isNegative = true;
 		// Process only abs(), and turn on flag.
 		valObj.value = -valObj.value;
 	}
+
 	valObj.sign = isNegative ? "-" : "";
+
 	// Fix the decimal first, toFixed will auto fill trailing zero.
 	valObj.svalue = Number(valObj.value).toFixed(maskObj.fraction.length);
 	// Convert number to string to trim off *all* trailing decimal zero(es)
 	valObj.svalue = Number(valObj.svalue).toString();
+
 	// Fill back any trailing zero according to format
 	// look for last zero in format
-	const posTrailZero = (maskObj.fraction.length > 0) ? maskObj.fraction.lastIndexOf("0") : -1;
+	const posTrailZero = (maskObj.fraction.length>0) ? maskObj.fraction.lastIndexOf("0"):-1;
 	let [valInteger = "0", valFraction = ""] = valObj.svalue.split(".");
 	if (valFraction.length <= posTrailZero) {
 		valFraction = posTrailZero < 0
 			? ""
 			: (Number("0." + valFraction).toFixed(posTrailZero + 1)).replace("0.", "");
 	}
+
 	valObj.integer = valInteger;
 	valObj.fraction = valFraction;
 	addSeparators(valObj, maskObj);
+
 	// Remove negative sign if result is zero
 	if (valObj.result === "0" || valObj.result === "") {
 		// Remove negative sign if result is zero
 		isNegative = false;
 		valObj.sign = "";
 	}
+
 	if (!isNegative && maskObj.maskHasPositiveSign) {
 		valObj.sign = "+";
-	}
+	} 
 	else if (isNegative && maskObj.maskHasPositiveSign) {
 		valObj.sign = "-";
-	}
+	} 
 	else if (isNegative) {
 		valObj.sign = options.enforceMaskSign && !maskObj.maskHasNegativeSign
 			? ""
 			: "-";
 	}
+
 	return valObj;
 }
-function addSeparators(valObj, maskObj) {
+
+function addSeparators(valObj: _lnf_value, maskObj: _lnf_mask) {
 	valObj.result = "";
 	// Look for separator
 	const szSep = maskObj.integer.split(maskObj.separator);
 	// Join back without separator for counting the pos of any leading 0
 	const maskInteger = szSep.join("");
+
 	const posLeadZero = maskInteger.indexOf("0");
 	if (posLeadZero > -1) {
 		while (valObj.integer.length < (maskInteger.length - posLeadZero)) {
 			valObj.integer = "0" + valObj.integer;
 		}
-	}
+	} 
 	else if (Number(valObj.integer) === 0) {
 		valObj.integer = "";
 	}
+
 	// Process the first group separator from decimal (.) only, the rest ignore.
 	// get the length of the last slice of split result.
 	const posSeparator = (szSep[1] && szSep[szSep.length - 1].length);
@@ -574,25 +651,28 @@ function addSeparators(valObj, maskObj) {
 				valObj.result += maskObj.separator;
 			}
 		}
-	}
+	} 
 	else {
 		valObj.result = valObj.integer;
 	}
+
 	valObj.result += (maskObj.fraction && valObj.fraction)
 		? maskObj.decimal + valObj.fraction
 		: "";
 	return valObj;
 }
-function format(mask, value, poptions = {}) {
+
+function format (mask: string, value: number, poptions: Partial<_lnf_options>={}):string {
 	if (!mask || isNaN(Number(value))) {
 		// Invalid inputs
 		return "NaN";
 	}
 	//const options={enforceMaskSign:false}||poptions;
 	const options = {
-		enforceMaskSign: ((poptions.enforceMaskSign === undefined) ? false : poptions.enforceMaskSign)
+		enforceMaskSign:((poptions.enforceMaskSign === undefined) ? false : poptions.enforceMaskSign)
 	};
 	const maskObj = processMask(mask);
 	const valObj = processValue(value, maskObj, options);
 	return maskObj.prefix + valObj.sign + valObj.result + maskObj.suffix;
 }
+

@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"module": "es6",
+		"target": "es6",
+		"alwaysStrict": true,
+		"strict": true,
+		"outDir": "./../",
+		"listFiles": true,
+		"diagnostics": true,
+		"noImplicitAny": true,
+		"noImplicitReturns": true,
+		"noUnusedParameters": true,	
+		"incremental": true,
+		"declaration": true
+	},
+	"files": [
+		"swf-utils.ts",
+		"swf-edtb.ts",
+		"swf-juga.ts",
+		"swf-main.ts"
+	]
+}

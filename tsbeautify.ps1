@@ -1,0 +1,1 @@
+D:/dvt/tsbeautify.ps1
