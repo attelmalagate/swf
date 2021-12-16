@@ -15,6 +15,8 @@ A Simple Web Framework, written in TypeScript
 
 These specs will certainly evolve with time and new needs, including server side functions to manage more sophisticated requirements (like authentication, localization) but the current objective was to put together a barebone framework to quickly develop simple applications like this [Universal Conversion Tool](https://www.malagate.com/tools/uct/uct-main.html)
 
+The framework was rewritten in TypeScript, and JQuery dependency eliminated. The js files have been left in the repository as a mater of convenience but are generated y the tsc compiler from the source files in the ts folder.
+
 ## Dependencies
 - fonts from Google
 - icons from [Feather](https://feathericons.com/)
