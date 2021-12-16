@@ -1,5 +1,5 @@
 # swf
-A Simple Web Framework
+A Simple Web Framework, written in TypeScript 
 
 ## Requirements and specs
 - single page application with header, footer, main panel with tabs, menu and optional side navigation panel
@@ -17,7 +17,6 @@ These specs will certainly evolve with time and new needs, including server side
 
 ## Dependencies
 - fonts from Google
-- JQuery; not really needed though and will be eliminated in the future
 - icons from [Feather](https://feathericons.com/)
   - including an addition, feather-sprite-circled.svg, developped to add a background circle to some of the icons defined in feather-sprite.svg 
 - Rob Garrison's excellent [javascript number formatter](https://github.com/Mottie/javascript-number-formatter)
